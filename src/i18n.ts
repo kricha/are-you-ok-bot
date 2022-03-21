@@ -1,0 +1,23 @@
+import i18n from "i18next";
+
+import translationEN from './locales/en.json';
+import translationUA from './locales/ua.json';
+
+const resources = {
+    en: {
+        translation: translationEN
+    },
+    ua: {
+        translation: translationUA
+    }
+};
+
+i18n
+    .init({
+        resources,
+        lng: "en",
+        // keySeparator: false
+    })
+;
+
+export default i18n;

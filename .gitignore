@@ -1,0 +1,9 @@
+/log
+/node_modules
+config.json
+/.idea
+isolate-*
+v8.log
+/dist
+/config
+/var/database.db
