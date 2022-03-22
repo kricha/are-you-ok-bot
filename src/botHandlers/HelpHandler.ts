@@ -6,7 +6,6 @@ import i18n from "../i18n";
 
 export default function HelpHandler(BotManager: BotManagerInterface) {
     BotManager.bot.onText(/^\/help/, (msg, match) => {
-        console.log(msg)
         db.getUserById(msg.from.id)
             .then(res => {
                 const lng = res.lang;

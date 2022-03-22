@@ -1,20 +1,21 @@
 module.exports = {
     apps: [{
-        name: 'star-prod',
+        name: 'prod',
         script: 'dist/index.js',
         instances: 1,
         autorestart: true,
         watch: true,
         node_args: '--experimental-specifier-resolution=node',
         source_map_support: true,
-        ignore_watch: ['node_modules', 'log', '.git', '.idea'],
+        ignore_watch: ['node_modules', 'log', '.git', '.idea', 'var'],
         env: {
             NODE_ENV: 'production',
             NODE_DEBUG: false,
             TZ: 'Europe/Kiev',
+            NTBA_FIX_319: 1,
         },
     }, {
-        name: 'star-dev',
+        name: 'dev',
         script: 'dist/index.js',
         instances: 1,
         autorestart: true,
