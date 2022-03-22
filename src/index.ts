@@ -101,5 +101,3 @@ const testTz = () => {
         ;
     }
 };
-
-testTz();

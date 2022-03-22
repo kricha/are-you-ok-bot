@@ -13,7 +13,7 @@ interface DbInterface {
 
     updateUserLang(uid: number, lng: string)
 
-    updateAreYouOkField(uid: number, dateKey: string, ayokKey: string)
+    updateAreYouOkField(uid: number, dateKey: string, ayokKey: string): void
 
     addOrUpdateUserSubs(uid, key, alias)
 
@@ -130,35 +130,47 @@ class DataBase implements DbInterface {
     }
 
     addToWaitSubsByUsername(uid, username, alias) {
-        return connector.run(
-            'INSERT or IGNORE INTO wait_subs_username (uid, username, alias) VALUES (:uid, :username, :alias)',
-            {
-                ':uid': uid,
-                ':username': username,
-                ':alias': alias
-            }
-        );
+        connector.get('select * from wait_subs_username where uid = :uid and username = :username', {
+            ':uid': uid,
+            ':username': username,
+        })
+            .then(res => {
+                if (res && res.alias !== alias) {
+                    return connector.run('UPDATE wait_subs_username SET alias = :alias where id = :id', {
+                        ':alias': alias,
+                        ':id': res.id
+                    });
+                } else {
+                    return connector.run('INSERT INTO wait_subs_username (uid, username, alias) VALUES (:uid, :username, :alias)', {
+                        ':uid': uid,
+                        ':username': username,
+                        ':alias': alias
+                    });
+                }
+            })
+        ;
     }
 
     addToWaitSubsByPhoneHash(uid, phoneHash, alias) {
-        return connector.run(
-            'INSERT or IGNORE INTO wait_subs_phone_hash (uid, phone, alias) VALUES (:uid, :phoneHash, :alias)',
-            {
-                ':uid': uid,
-                ':phoneHash': phoneHash,
-                ':alias': alias
-            }
-        );
-    }
-
-    addNewUserSubs(uid, json) {
-        return connector.run(
-            'INSERT INTO subs (uid, users) VALUES (:uid, :json)',
-            {
-                ':uid': uid,
-                ':json': json
-            }
-        )
+        connector.get('SELECT * FROM wait_subs_phone_hash WHERE uid = :uid and phone = :phoneHash;', {
+            ':uid': uid,
+            ':phoneHash': phoneHash,
+        })
+            .then(res => {
+                if (res && res.alias !== alias) {
+                    return connector.run('UPDATE wait_subs_phone_hash SET alias = :alias where id = :id;', {
+                        ':alias': alias,
+                        ':id': res.id
+                    });
+                } else {
+                    return connector.run('INSERT INTO wait_subs_phone_hash (uid, phone, alias) VALUES (:uid, :phoneHash, :alias)', {
+                        ':uid': uid,
+                        ':phoneHash': phoneHash,
+                        ':alias': alias
+                    });
+                }
+            })
+        ;
     }
 
     updateUserContactInformation(uid, active, phoneHash, country) {
@@ -182,12 +194,12 @@ class DataBase implements DbInterface {
             })
     }
 
-    updateAreYouOkField(uid, dateKey, ayokKey) {
-        return connector.run(
-            'UPDATE users SET answers = json_insert(answers, :key, 1) where uid = :uid;', {
-                ':key': `$.${dateKey}.${ayokKey}`,
-                ':uid': uid
+    updateAreYouOkField(uid, jsonArray) {
+        connector.prepare(`UPDATE users SET answers = json_insert(answers, ${jsonArray.map(()=>'?').join(', ')}) where uid = ${uid};`)
+            .then(stmt => {
+                stmt.bind(jsonArray).then(()=>{})
             })
+        ;
     }
 
     getUserSubsById(uid) {
