@@ -13,7 +13,7 @@ interface DbInterface {
 
     updateUserLang(uid: number, lng: string)
 
-    updateAreYouOkField(uid: number, dateKey: string, ayokKey: string): void
+    updateAreYouOkField(uid: number, key: string): void
 
     addOrUpdateUserSubs(uid, key, alias)
 
@@ -194,12 +194,8 @@ class DataBase implements DbInterface {
             })
     }
 
-    updateAreYouOkField(uid, jsonArray) {
-        connector.prepare(`UPDATE users SET answers = json_insert(answers, ${jsonArray.map(()=>'?').join(', ')}) where uid = ${uid};`)
-            .then(stmt => {
-                stmt.bind(jsonArray).then(()=>{})
-            })
-        ;
+    updateAreYouOkField(uid, key) {
+        connector.run(`UPDATE users SET answers = json_insert(answers, ${key}, 1) where uid = ${uid};`);
     }
 
     getUserSubsById(uid) {

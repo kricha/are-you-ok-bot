@@ -5,7 +5,7 @@ module.exports = {
         instances: 1,
         autorestart: true,
         watch: true,
-        node_args: '--experimental-specifier-resolution=node',
+        node_args: '--experimental-specifier-resolution=node --max-old-space-size=256',
         source_map_support: true,
         ignore_watch: ['node_modules', 'log', '.git', '.idea', 'var'],
         env: {
@@ -21,7 +21,7 @@ module.exports = {
         autorestart: true,
         watch: true,
         ignore_watch: ['node_modules', 'log', '.git', '.idea', 'src', 'var'],
-        node_args: '--experimental-specifier-resolution=node',
+        node_args: '--experimental-specifier-resolution=node  --max-old-space-size=256',
         source_map_support: true,
         env: {
             NODE_ENV: 'development',

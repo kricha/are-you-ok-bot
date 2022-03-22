@@ -12,20 +12,12 @@ export default function AreYouOkHandler(BotManager: BotManagerInterface) {
             db.getUserById(uid)
                 .then(res => {
                     const ayokHour = langArray[1];
-                    const intHours = parseInt(ayokHour);
                     const messageDT =  moment(query.message.date*1000);
                     const dateKey = messageDT.format(AYOK_DATE_FORMAT);
-                    let jsonInsert = [`'$.${dateKey}.${ayokHour}'`, 1];
-                    if (intHours > 15) {
-                        jsonInsert.push(`'$.${dateKey}.15'`)
-                        jsonInsert.push(1);
-                    }
-                    if (intHours > 9) {
-                        jsonInsert.push(`'$.${dateKey}.09'`);
-                        jsonInsert.push(1);
-                    }
                     if (messageDT.diff(moment(), 'days') < 1) {
-                        db.updateAreYouOkField(uid, jsonInsert);
+                        db.updateAreYouOkField(uid, `'$.${dateKey}.${ayokHour}'`);
+                    } else {
+                        console.log(messageDT, moment());
                     }
                     botManager.bot.editMessageText(i18n.t('good.thanks', {lng: res.lang}), {
                         chat_id: uid,
