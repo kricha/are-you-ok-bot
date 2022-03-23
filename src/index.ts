@@ -4,6 +4,7 @@ import {db} from './db';
 import BotManager from './BotManager';
 import {tzMinutes} from './utils';
 import {AYOK_DATE_FORMAT, REPORT_HOURS} from './constants';
+import i18n from './i18n';
 
 process.env.NTBA_FIX_319 = '1';
 
@@ -37,6 +38,49 @@ cron.schedule('0 * * * *', () => {
 
 cron.schedule('0 * * * *', () => {
     testTz();
+});
+
+cron.schedule('*/30 * * * *', () => {
+    db.getAllWaitingAnswers(moment().unix())
+        .then(res => {
+            if (res.length) {
+                for (const row of res) {
+                    db.getAllSubscriberByUid(row.uid)
+                        .then(subscribers => {
+                            if (subscribers.length) {
+                                for (const sub of subscribers) {
+                                    const minutesDiff = moment()
+                                        .diff(
+                                            moment(row.ts * 1000).utcOffset(sub.tz),
+                                            'minute'
+                                        )
+                                    ;
+                                    BotManager.bot.sendMessage(sub.uid, i18n.t('sub.not.answering', {
+                                            lng: sub.lang,
+                                            name: sub.alias,
+                                            uid: row.uid,
+                                            min: minutesDiff
+                                        })
+                                        , {
+                                            parse_mode: 'MarkdownV2'
+                                        }
+                                    )
+                                        .catch(error => {
+                                            if (error.response && error.response.statusCode === 403) {
+                                                db.setUserInActive(sub.uid);
+                                            }
+                                        })
+                                    ;
+                                }
+                            }
+                            BotManager.bot.deleteMessage(row.uid, row.message_id);
+                            db.deleteFromWaitAnswer(row.uid);
+                        })
+                    ;
+                }
+            }
+        })
+    ;
 });
 
 const testTz = () => {
@@ -74,7 +118,7 @@ const testTz = () => {
                                             if (!report[sub.uid].alias) {
                                                 report[sub.uid].alias = sub.username || sub.uid;
                                             }
-                                            if (!Object.prototype.hasOwnProperty.call(answers,currentReportKey)) {
+                                            if (!Object.prototype.hasOwnProperty.call(answers, currentReportKey)) {
                                                 report[sub.uid].status = 'not_ok';
                                             } else {
                                                 const a = answers[currentReportKey];

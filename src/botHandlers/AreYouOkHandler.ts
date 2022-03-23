@@ -23,6 +23,7 @@ export default function AreYouOkHandler(BotManager: BotManagerInterface) {
                         chat_id: uid,
                         message_id: query.message.message_id
                     });
+                    db.deleteFromWaitAnswer(uid);
                 })
             ;
         }

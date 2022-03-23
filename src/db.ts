@@ -9,6 +9,8 @@ const connector = await open({
 interface DbInterface {
     addNewUser(uid: number, username: string)
 
+    setUserInActive(uid)
+
     updateUserTz(uid: number, tz: number)
 
     updateUserLang(uid: number, lng: string)
@@ -28,6 +30,14 @@ interface DbInterface {
     deleteWaitUserUsernameSubById(id: number): void
 
     getAllWaitSubsByUsername(username: string)
+
+    addToWaitAnswer(uid, ts, message_id)
+
+    deleteFromWaitAnswer(uid)
+
+    getAllWaitingAnswers(ts);
+
+    getAllSubscriberByUid(uid);
 }
 
 class DataBase implements DbInterface {
@@ -37,6 +47,15 @@ class DataBase implements DbInterface {
             {
                 ':uid': uid,
                 ':username': username
+            }
+        );
+    }
+
+    setUserInActive(uid) {
+        return connector.run(
+            'UPDATE users SET active = 0 where uid = :uid;',
+            {
+                ':uid': uid
             }
         );
     }
@@ -201,6 +220,41 @@ class DataBase implements DbInterface {
     getUserSubsById(uid) {
         return connector.get('SELECT * from subs where uid = :uid;', {
             ':uid': uid
+        });
+    }
+
+    addToWaitAnswer(uid, ts, message_id) {
+        return connector.run(
+            'INSERT or IGNORE INTO wait_answer_queue (uid, ts, message_id) VALUES (:uid, :ts, :message_id)',
+            {
+                ':uid': uid,
+                ':ts': ts,
+                ':message_id': message_id,
+            }
+        );
+    }
+
+    deleteFromWaitAnswer(uid) {
+        return connector.run(
+            'DELETE FROM wait_answer_queue where uid = :uid;',
+            {
+                ':uid': uid
+            }
+        );
+    }
+
+    getAllWaitingAnswers(ts) {
+        return connector.all(
+            'SELECT * FROM wait_answer_queue where ts < :ts;',
+            {
+                ':ts': ts,
+            }
+        );
+    }
+
+    getAllSubscriberByUid(uid){
+        return connector.all('SELECT s.uid, json_extract(s.users, :key) as alias, u.tz, u.lang from subs s join users u on s.uid = u.uid where alias is not NULL and u.active =1;', {
+            ':key': `$.${uid}`
         });
     }
 

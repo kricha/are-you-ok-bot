@@ -6,7 +6,7 @@
   "🚫": "🚫",
   "thanks.sorry": "Sorry 🤝 I can help only after I will make sure that you're not from the agressor country 🤨",
   "sorry.not.active": "Sorry, but I can not help you.",
-  "sub.added": "Now you will be informed if everything is fine with {{contact}} {{name}} 👍",
+  "sub.added": "Now you will be informed if everything is fine with {{name}} 👍",
   "invalid.phone": "Sorry, but it seems like the number is incorrect 😒",
   "are.you.ok": "Are you okay? 🙏",
   "im.ok": "Thank you! I'm doing fine 💪",
@@ -22,5 +22,6 @@
   "command.help": "<b>Subscribe command</b>\n\n<pre>/sto &lt;username&gt; &lt;alias&gt;</pre> or\n<pre>/sto &lt;phone&gt; &lt;alias&gt;</pre>, where\n<b>&lt;username&gt;</b><i> - is a nick name of your friend in telegram, it has to  <b>necessarily</b> start with symbol <strong>@</strong>, for example: @kricha</i>\n<b>&lt;alias&gt;</b><i> - this is a name for a person you know, for you to understand who my report is aboutх</i>\n<b>&lt;phone&gt;</b><i> - input phone number in internation format and should necessarily start with symbol <b>+</b>\n---------------------\nto add ONE person - only one command is required, select one that suit you better..</i>",
   "help": "🆘 Please read this message! I will help you! 🆘\n\n{{- time_set_header}}\n<i>Because I can help people from all around the world I need to know your time zone, to be precise in my questions and reports. You can change your time zone using command /change_timezone</i>\n\n<b>How can I subscribe to someone?</b>\n<i>1. Easiest way 🔥 You can share me needed contact using a clip 📎 on mobile, or a 'share' function on other devices</i>\n<i>2. Use this command for help - /command_help</i>\n\n<b>Whay is this all about?</b>\n<i>Next, I will ask you every day at 9:00, 15:00 and 21:00 if you're okay, and at 22:00 I will send you a report, about how your friends are doing, (only if they are using me as well, so please share me) 💪</i>\n\n<b>By using me you agree that I will know your username(if set), your telegram ID and your phone number(not in an open view) 🤓</b>\n\n<b>Link</b>\n- <a href='https://t.me/kRicha'>Questions/Suggestions</a>\n- <a href='https://github.com/kricha/are-you-ok-bot'>My code</a>\n- <a href='https://t.me/AreYouOkBotNews'>My news</a>\n\nStart over - /start\n\nThank you for attention 🌚",
   "label.share.bot": "Share a bot 📬",
-  "call.join": "Join 🤗"
+  "call.join": "Join 🤗",
+  "sub.not.answering": "[{{name}}](tg://user?id={{uid}}) doesn't answer for over {{min}} minutes 🤔 Maybe you need to contact him ❗️"
 }

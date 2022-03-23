@@ -131,7 +131,7 @@ class BotManager implements BotManagerInterface {
     }
 
     sendAreYouOkRequest(chat_id, lng, callback_data) {
-        this.bot.sendMessage(chat_id, i18n.t('are.you.ok', {lng}), {
+        return this.bot.sendMessage(chat_id, i18n.t('are.you.ok', {lng}), {
             reply_markup: {
                 inline_keyboard: [
                     [
