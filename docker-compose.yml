@@ -9,4 +9,4 @@ services:
       - ./:/app
 #    platform: linux/arm64/v8
     platform: linux/amd64
-    command: 'npx tsc-watch --sourceMap --onFirstSuccess "pm2-runtime start ./ecosystem.config.cjs --only dev"'
+    command: 'npm install && npx tsc-watch --sourceMap --onFirstSuccess "pm2-runtime start ./ecosystem.config.cjs --only dev"'
