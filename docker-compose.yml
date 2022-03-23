@@ -1,13 +1,12 @@
 version: "3.8"
 services:
-  server:
+  bot:
     build:
       context: .
       dockerfile: Dockerfile.local
     container_name: bot
     volumes:
       - ./:/app
-    working_dir: /app
 #    platform: linux/arm64/v8
     platform: linux/amd64
     command: 'npx tsc-watch --sourceMap --onFirstSuccess "pm2-runtime start ./ecosystem.config.cjs --only dev"'

@@ -1,5 +1,5 @@
 FROM node:16-alpine
-
+WORKDIR /app
 RUN apk update && apk add --no-cache tzdata rsync openssh \
 && apk add --no-cache --virtual .gyp python3 make g++ \
 &&  cp /usr/share/zoneinfo/Europe/Kiev /etc/localtime

@@ -1,5 +1,5 @@
-import {open} from "sqlite";
-import sqlite3 from "sqlite3";
+import {open} from 'sqlite';
+import sqlite3 from 'sqlite3';
 
 const connector = await open({
     filename: 'var/database.db',
@@ -62,14 +62,14 @@ class DataBase implements DbInterface {
         return connector
             .all('select * from users where active = 1 and tz in (:timezones);', {
                 ':timezones': timezones.join(',')
-            })
+            });
     }
 
     getUsersByIds(ids) {
         return connector
             .all('select * from users where uid in (:ids);', {
                 ':ids': ids.join(',')
-            })
+            });
     }
 
     deleteWaitUserUsernameSubById(id: number) {
@@ -187,11 +187,11 @@ class DataBase implements DbInterface {
 
     addOrUpdateUserSubs(uid, key, alias) {
         return connector.run(
-            "INSERT INTO subs (uid, users) VALUES (:uid, json_insert('{}', :key, :alias )) ON CONFLICT(uid) DO UPDATE SET users = json_insert(users, :key, :alias );", {
+            'INSERT INTO subs (uid, users) VALUES (:uid, json_insert(\'{}\', :key, :alias )) ON CONFLICT(uid) DO UPDATE SET users = json_insert(users, :key, :alias );', {
                 ':key': `$.${key}`,
                 ':alias': alias,
                 ':uid': uid
-            })
+            });
     }
 
     updateAreYouOkField(uid, key) {
@@ -201,13 +201,13 @@ class DataBase implements DbInterface {
     getUserSubsById(uid) {
         return connector.get('SELECT * from subs where uid = :uid;', {
             ':uid': uid
-        })
+        });
     }
 
     runMigrations() {
         connector.migrate()
             .catch(error => {
-                console.log(error)
+                console.log(error);
             })
         ;
     }

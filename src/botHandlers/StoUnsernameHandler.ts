@@ -1,5 +1,5 @@
-import {db} from "../db";
-import {BotManagerInterface} from "../BotManager";
+import {db} from '../db';
+import {BotManagerInterface} from '../BotManager';
 
 export default function stoUsernameHandler(BotManager: BotManagerInterface) {
     BotManager.bot.onText(/^\/sto @(?<username>[A-z0-9_]{5,}) ?(?<alias>.*)?$/, (msg, match) => {

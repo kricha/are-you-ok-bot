@@ -1,11 +1,11 @@
-import {db} from "../db";
-import {BotManagerInterface} from "../BotManager";
-import {parsePhoneNumber} from "libphonenumber-js";
-import {hash} from "../utils";
-import {RESTRICTED_COUNTRIES} from "../constants";
+import {db} from '../db';
+import {BotManagerInterface} from '../BotManager';
+import {parsePhoneNumber} from 'libphonenumber-js';
+import {hash} from '../utils';
+import {RESTRICTED_COUNTRIES} from '../constants';
 
 export default function ContactHandler(BotManager: BotManagerInterface) {
-    BotManager.bot.on("contact", (msg) => {
+    BotManager.bot.on('contact', (msg) => {
         const currentUid = msg.from.id;
         const ownContact = msg.contact.user_id === msg.from.id;
         db.getUserById(currentUid)
@@ -23,11 +23,11 @@ export default function ContactHandler(BotManager: BotManagerInterface) {
                         if (msg.contact.last_name) {
                             aliasArray.push(msg.contact.last_name);
                         }
-                        let alias = aliasArray.length ? aliasArray.join(' ') : '';
+                        const alias = aliasArray.length ? aliasArray.join(' ') : '';
                         BotManager.processSharedPhoneContact(currentUid, msg.message_id, phoneNumber, res.lang, alias);
                     } else {
                         db.updateUserContactInformation(currentUid, !isRestrictedContact, phoneHash, phoneNumber.country)
-                            .then(result => {
+                            .then(() => {
                                     if (phoneNumber.country === 'RU') {
                                         BotManager.sendRussianWarshipGoToHellReply(msg.chat.id, msg.message_id);
                                     } else {
@@ -37,7 +37,7 @@ export default function ContactHandler(BotManager: BotManagerInterface) {
                                                 if (!res.length) {
                                                     return;
                                                 }
-                                                for (let row of res) {
+                                                for (const row of res) {
                                                     db.addOrUpdateUserSubs(row.uid, currentUid, row.alias)
                                                         .then(() => {
                                                             db.deleteWaitUserPhoneSubById(row.id);
@@ -52,7 +52,7 @@ export default function ContactHandler(BotManager: BotManagerInterface) {
                                                     if (!res.length) {
                                                         return;
                                                     }
-                                                    for (let row of res) {
+                                                    for (const row of res) {
                                                         db.addOrUpdateUserSubs(row.uid, currentUid, row.alias)
                                                             .then(() => {
                                                                 db.deleteWaitUserUsernameSubById(row.id);

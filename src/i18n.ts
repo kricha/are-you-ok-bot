@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import i18n from 'i18next';
 
 import translationEN from './locales/en.json';
 import translationUA from './locales/ua.json';
@@ -15,7 +15,7 @@ const resources = {
 i18n
     .init({
         resources,
-        lng: "en",
+        lng: 'en',
         // keySeparator: false
     })
 ;

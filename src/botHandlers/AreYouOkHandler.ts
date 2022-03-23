@@ -1,8 +1,8 @@
-import {db} from "../db";
-import botManager, {BotManagerInterface} from "../BotManager";
-import moment from "moment";
-import {AYOK_DATE_FORMAT} from "../constants";
-import i18n from "../i18n";
+import {db} from '../db';
+import botManager, {BotManagerInterface} from '../BotManager';
+import moment from 'moment';
+import {AYOK_DATE_FORMAT} from '../constants';
+import i18n from '../i18n';
 
 export default function AreYouOkHandler(BotManager: BotManagerInterface) {
     BotManager.bot.on('callback_query', query => {

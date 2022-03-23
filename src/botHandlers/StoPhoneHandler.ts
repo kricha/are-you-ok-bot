@@ -1,6 +1,6 @@
-import {db} from "../db";
-import {parsePhoneNumber} from "libphonenumber-js";
-import {BotManagerInterface} from "../BotManager";
+import {db} from '../db';
+import {parsePhoneNumber} from 'libphonenumber-js';
+import {BotManagerInterface} from '../BotManager';
 
 export default function stoPhoneHandler(BotManager: BotManagerInterface) {
     BotManager.bot.onText(/^\/sto (?<phone>\+?[0-9]+[0-9\s]+[0-9]+) ?(?<alias>.*)?$/, (msg, match) => {
@@ -10,9 +10,9 @@ export default function stoPhoneHandler(BotManager: BotManagerInterface) {
                 const lng = res.lang;
                 if (res.active === 1) {
                     const alias = match.groups.alias || null;
-                    BotManager.processSharedPhoneContact(msg.from.id, msg.message_id, phoneNumber, lng, alias)
+                    BotManager.processSharedPhoneContact(msg.from.id, msg.message_id, phoneNumber, lng, alias);
                 } else {
-                    BotManager.sendNotActiveReply(msg.chat.id, msg.message_id, lng)
+                    BotManager.sendNotActiveReply(msg.chat.id, msg.message_id, lng);
                     BotManager.requestPhone(msg.chat.id, lng);
                 }
             })

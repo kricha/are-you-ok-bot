@@ -1,15 +1,15 @@
-import TelegramBot from "node-telegram-bot-api";
-import stoPhoneHandler from "./botHandlers/StoPhoneHandler";
-import i18n from "./i18n";
-import {db} from "./db";
-import {buildTzKeyboardArray, getLangKeyboard, hash} from "./utils";
-import stoUsernameHandler from "./botHandlers/StoUnsernameHandler";
-import ContactHandler from "./botHandlers/ContactHandler";
-import LanguageCallbackHandler from "./botHandlers/LanguageCallbackHandler";
-import AreYouOkHandler from "./botHandlers/AreYouOkHandler";
-import HelpHandler from "./botHandlers/HelpHandler";
+import TelegramBot from 'node-telegram-bot-api';
+import stoPhoneHandler from './botHandlers/StoPhoneHandler';
+import i18n from './i18n';
+import {db} from './db';
+import {buildTzKeyboardArray, getLangKeyboard, hash} from './utils';
+import stoUsernameHandler from './botHandlers/StoUnsernameHandler';
+import ContactHandler from './botHandlers/ContactHandler';
+import LanguageCallbackHandler from './botHandlers/LanguageCallbackHandler';
+import AreYouOkHandler from './botHandlers/AreYouOkHandler';
+import HelpHandler from './botHandlers/HelpHandler';
 import nconf from 'nconf';
-import {PhoneNumber} from "libphonenumber-js";
+import {PhoneNumber} from 'libphonenumber-js';
 
 nconf.file({file: './config.json'});
 const token = nconf.get('botToken');
@@ -27,7 +27,7 @@ export interface BotManagerInterface {
 
     requestPhone(chat_id, lng): void
 
-    requestTzUpdate(chat_id: Number, lng: String): void
+    requestTzUpdate(chat_id: number, lng: string): void
 
     sendHelpMessage(chat_id, lng, offset?: number, default_header?: boolean): void
 
@@ -38,6 +38,7 @@ export interface BotManagerInterface {
 
 class BotManager implements BotManagerInterface {
     bot = new TelegramBot(token, {polling: true});
+
 
     sendInvalidPhoneReply(chat_id, reply_to_message_id, lng) {
         this.bot.sendMessage(
@@ -88,12 +89,12 @@ class BotManager implements BotManagerInterface {
                             text: i18n.t('share.my.phone.number', {lng}),
                             request_contact: true
                         }
-                        ],
+                    ],
                     // [i18n.t('🚫', {lng})]
                 ],
             }
         });
-    };
+    }
 
     tzCallBackHandler() {
         this.bot.on('callback_query', query => {
@@ -104,7 +105,10 @@ class BotManager implements BotManagerInterface {
                         const tz = tzArray[1];
                         db.updateUserTz(query.from.id, tz)
                             .then(() => {
-                                this.bot.editMessageText(i18n.t('tz.chosen', {lng: res.lang, offset: `GMT${parseInt(tz)>0?'+':''}${+tz / 60}`}), {
+                                this.bot.editMessageText(i18n.t('tz.chosen', {
+                                    lng: res.lang,
+                                    offset: `GMT${parseInt(tz) > 0 ? '+' : ''}${+tz / 60}`
+                                }), {
                                     chat_id: query.message.chat.id,
                                     message_id: query.message.message_id
                                 });
@@ -142,7 +146,7 @@ class BotManager implements BotManagerInterface {
     }
 
     cancelContactHandler() {
-        this.bot.onText(/🚫/, (msg, match) => {
+        this.bot.onText(/🚫/, (msg) => {
             db.getUserById(msg.from.id)
                 .then(res => {
                     this.bot.sendMessage(
@@ -165,11 +169,11 @@ class BotManager implements BotManagerInterface {
             reply_markup: {
                 inline_keyboard: getLangKeyboard()
             }
-        })
+        });
     }
 
     startHandler() {
-        this.bot.onText(/\/start/, (msg, match) => {
+        this.bot.onText(/\/start/, (msg) => {
             const username = msg.from.username !== undefined ? msg.from.username.toLowerCase() : null;
             db.addNewUser(msg.from.id, username)
                 .then(() => {
@@ -177,13 +181,13 @@ class BotManager implements BotManagerInterface {
                     }
                 )
                 .catch(err => {
-                    console.log(err)
-                })
+                    console.log(err);
+                });
         });
     }
 
     changeTimeZoneHandler() {
-        this.bot.onText(/\/change_timezone/, (msg, match) => {
+        this.bot.onText(/\/change_timezone/, (msg) => {
             db.getUserById(msg.from.id)
                 .then(res => {
                     this.requestTzUpdate(msg.chat.id, res.lang);
@@ -193,21 +197,21 @@ class BotManager implements BotManagerInterface {
     }
 
     sendAreYouOkReport(chat_id, lng, report: any) {
-        console.log(report)
+        console.log(report);
         const reportTextArray = [];
         for (const uid in report) {
             const sub = report[uid];
             const status = i18n.t(`im.status.${sub.status}`, {lng});
-            console.log(status)
-            reportTextArray.push(`[${sub.alias ? sub.alias : uid}](tg://user?id=${uid}): ${status}`)
+            console.log(status);
+            reportTextArray.push(`[${sub.alias ? sub.alias : uid}](tg://user?id=${uid}): ${status}`);
         }
-        console.log(i18n.t('report', {lng, report: reportTextArray.join("\n")}))
-        this.bot.sendMessage(chat_id, i18n.t('report', {lng, report: reportTextArray.join("\n")}), {
+        console.log(i18n.t('report', {lng, report: reportTextArray.join('\n')}));
+        this.bot.sendMessage(chat_id, i18n.t('report', {lng, report: reportTextArray.join('\n')}), {
             parse_mode: 'MarkdownV2'
         });
     }
 
-    processSharedPhoneContact(uid: number, message_id: number, phoneNumber: PhoneNumber, lng: string, alias?: string){
+    processSharedPhoneContact(uid: number, message_id: number, phoneNumber: PhoneNumber, lng: string, alias?: string) {
         if (!phoneNumber.isValid()) {
             this.sendInvalidPhoneReply(uid, message_id, lng);
         }
@@ -216,13 +220,13 @@ class BotManager implements BotManagerInterface {
         }
         const phoneInter = phoneNumber.formatInternational().replace(/[\s+]/g, '');
         if (!alias) {
-            alias = phoneInter.replace(phoneInter.substring(3,8), '*****');
+            alias = phoneInter.replace(phoneInter.substring(3, 8), '*****');
         }
         const phoneHash = hash(phoneInter);
         db.getUserByPhoneHash(phoneHash)
             .then(res => {
                 if (!res) {
-                    db.addToWaitSubsByPhoneHash(uid, phoneHash, alias)
+                    db.addToWaitSubsByPhoneHash(uid, phoneHash, alias);
                 } else {
                     db.addOrUpdateUserSubs(uid, res.uid, alias);
                 }
@@ -232,7 +236,7 @@ class BotManager implements BotManagerInterface {
     }
 
     sendHelpMessage(chat_id, lng, offset = 120, default_header = false) {
-        const gmt = (offset > 0 ? '+' :'') + (offset/60).toString();
+        const gmt = (offset > 0 ? '+' : '') + (offset / 60).toString();
         const timeHeader = default_header
             ? i18n.t('the.time.is.set.default', {lng})
             : i18n.t('the.time.is.set.real', {lng, offset: gmt});
@@ -256,7 +260,7 @@ class BotManager implements BotManagerInterface {
         this.bot.sendMessage(chat_id, i18n.t('command.help', {lng}), {
             parse_mode: 'HTML',
             disable_web_page_preview: true
-        })
+        });
     }
 
     init() {
