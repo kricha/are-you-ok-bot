@@ -4,6 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
+    "start": "npm install && npx tsc-watch --sourceMap --onFirstSuccess 'pm2-runtime start ./ecosystem.config.cjs --only dev'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

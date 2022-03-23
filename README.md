@@ -6,4 +6,4 @@
     - `docker compose build`
     - `echo '{"botToken":"YOUR_BOT_TOKEN"}' > config.json`
     - `docker compose up`
-- Or you could install manually `node` and `pm2`, install npm dependencies, create config file(look above) and then run `npx tsc-watch --sourceMap --onFirstSuccess "pm2-runtime start ./ecosystem.config.cjs --only dev"` 
+- Or you could install manually `node` and `pm2`, install npm dependencies, create config file(look above) and then run `npm start` 
