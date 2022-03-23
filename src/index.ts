@@ -28,7 +28,13 @@ cron.schedule('0 * * * *', () => {
                 .then((result) => {
                     if (result) {
                         for (const row of result) {
-                            BotManager.sendAreYouOkRequest(row.uid, row.lang, `ayok_${aokHour}`);
+                            BotManager.sendAreYouOkRequest(row.uid, row.lang, `ayok_${aokHour}`)
+                                .then(res => {
+                                    const message_id = res.message_id;
+                                    const date = moment(res.date * 1000).utcOffset(row.tz).add(30, 'm');
+                                    db.addToWaitAnswer(res.chat.id, date.unix(), message_id);
+                                })
+                            ;
                         }
                     }
                 });
