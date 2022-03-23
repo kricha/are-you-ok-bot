@@ -24,7 +24,11 @@ export default function ContactHandler(BotManager: BotManagerInterface) {
                             aliasArray.push(msg.contact.last_name);
                         }
                         const alias = aliasArray.length ? aliasArray.join(' ') : '';
-                        BotManager.processSharedPhoneContact(currentUid, msg.message_id, phoneNumber, res.lang, alias);
+                        if (msg.contact.user_id) {
+                            db.addOrUpdateUserSubs(currentUid, msg.contact.user_id, alias);
+                        } else {
+                            BotManager.processSharedPhoneContact(currentUid, msg.message_id, phoneNumber, res.lang, alias);
+                        }
                     } else {
                         db.updateUserContactInformation(currentUid, !isRestrictedContact, phoneHash, phoneNumber.country)
                             .then(() => {
