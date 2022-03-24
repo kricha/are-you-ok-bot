@@ -1,10 +1,10 @@
 import {db} from '../db';
-import {BotManagerInterface} from '../BotManager';
 import {parsePhoneNumber} from 'libphonenumber-js';
 import {hash} from '../utils';
 import {RESTRICTED_COUNTRIES} from '../constants';
+import BotManagerInterface from '../Interfaces/BotManagerInterface';
 
-export default function ContactHandler(BotManager: BotManagerInterface) {
+export default function ContactBotHandler(BotManager: BotManagerInterface) {
     BotManager.bot.on('contact', (msg) => {
         const currentUid = msg.from.id;
         const ownContact = msg.contact.user_id === msg.from.id;

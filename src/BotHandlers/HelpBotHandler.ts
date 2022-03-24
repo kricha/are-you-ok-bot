@@ -1,7 +1,7 @@
 import {db} from '../db';
-import {BotManagerInterface} from '../BotManager';
+import BotManagerInterface from '../Interfaces/BotManagerInterface';
 
-export default function HelpHandler(BotManager: BotManagerInterface) {
+export default function HelpBotHandler(BotManager: BotManagerInterface) {
     BotManager.bot.onText(/^\/help/, (msg) => {
         db.getUserById(msg.from.id)
             .then(res => {

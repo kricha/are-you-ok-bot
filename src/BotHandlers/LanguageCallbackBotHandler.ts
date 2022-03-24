@@ -1,8 +1,8 @@
 import {db} from '../db';
 import i18n from '../i18n';
-import {BotManagerInterface} from '../BotManager';
+import BotManagerInterface from '../Interfaces/BotManagerInterface';
 
-export default function LanguageCallbackHandler(BotManager: BotManagerInterface) {
+export default function LanguageCallbackBotHandler(BotManager: BotManagerInterface) {
     BotManager.bot.on('callback_query', query => {
         const langArray = query.data.split('_');
         if (langArray.length === 2 && langArray[0] === 'lang') {

@@ -1,42 +1,19 @@
 import TelegramBot from 'node-telegram-bot-api';
-import stoPhoneHandler from './botHandlers/StoPhoneHandler';
 import i18n from './i18n';
 import {db} from './db';
 import {buildTzKeyboardArray, getLangKeyboard, hash} from './utils';
-import stoUsernameHandler from './botHandlers/StoUnsernameHandler';
-import ContactHandler from './botHandlers/ContactHandler';
-import LanguageCallbackHandler from './botHandlers/LanguageCallbackHandler';
-import AreYouOkHandler from './botHandlers/AreYouOkHandler';
-import HelpHandler from './botHandlers/HelpHandler';
 import nconf from 'nconf';
 import {PhoneNumber} from 'libphonenumber-js';
+import StoPhoneBotHandler from './BotHandlers/StoPhoneBotHandler';
+import StoUsernameBotHandler from './BotHandlers/StoUsernameBotHandler';
+import ContactBotHandler from './BotHandlers/ContactBotHandler';
+import AreYouOkBotHandler from './BotHandlers/AreYouOkBotHandler';
+import HelpBotHandler from './BotHandlers/HelpBotHandler';
+import LanguageCallbackBotHandler from './BotHandlers/LanguageCallbackBotHandler';
+import BotManagerInterface from './Interfaces/BotManagerInterface';
 
 nconf.file({file: './config.json'});
 const token = nconf.get('botToken');
-
-export interface BotManagerInterface {
-    bot: TelegramBot
-
-    sendSubAddedReply(chat_id, reply_to_message_id, lng, name): void
-
-    sendNotActiveReply(chat_id, reply_to_message_id, lng): void
-
-    sendThanksPhoneShareReply(chat_id, lng, hash): void
-
-    sendRussianWarshipGoToHellReply(chat_id, reply_to_message_id): void
-
-    requestPhone(chat_id, lng): void
-
-    requestTzUpdate(chat_id: number, lng: string): void
-
-    sendHelpMessage(chat_id, lng, offset?: number, default_header?: boolean): void
-
-    sendCommandHelpMessage(chat_id, lng): void
-
-    processSharedPhoneContact(uid: number, message_id: number, phoneNumber: PhoneNumber, lng: string, alias?: string)
-
-    handleForbiddenRequest(error, uid): void
-}
 
 class BotManager implements BotManagerInterface {
     bot = new TelegramBot(token, {polling: true});
@@ -270,12 +247,12 @@ class BotManager implements BotManagerInterface {
     init() {
         this.startHandler();
         this.changeTimeZoneHandler();
-        stoPhoneHandler(this);
-        stoUsernameHandler(this);
-        ContactHandler(this);
-        AreYouOkHandler(this);
-        HelpHandler(this);
-        LanguageCallbackHandler(this);
+        StoPhoneBotHandler(this);
+        StoUsernameBotHandler(this);
+        ContactBotHandler(this);
+        AreYouOkBotHandler(this);
+        HelpBotHandler(this);
+        LanguageCallbackBotHandler(this);
         this.tzCallBackHandler();
         this.cancelContactHandler();
     }

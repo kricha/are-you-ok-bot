@@ -1,7 +1,7 @@
 import {db} from '../db';
-import {BotManagerInterface} from '../BotManager';
+import BotManagerInterface from '../Interfaces/BotManagerInterface';
 
-export default function stoUsernameHandler(BotManager: BotManagerInterface) {
+export default function StoUsernameBotHandler(BotManager: BotManagerInterface) {
     BotManager.bot.onText(/^\/sto @(?<username>[A-z0-9_]{5,}) ?(?<alias>.*)?$/, (msg, match) => {
         const username = match.groups.username.toString().toLowerCase();
         const uid = msg.from.id;

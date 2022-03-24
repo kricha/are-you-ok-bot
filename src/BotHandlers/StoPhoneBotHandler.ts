@@ -1,8 +1,8 @@
 import {db} from '../db';
 import {parsePhoneNumber} from 'libphonenumber-js';
-import {BotManagerInterface} from '../BotManager';
+import BotManagerInterface from '../Interfaces/BotManagerInterface';
 
-export default function stoPhoneHandler(BotManager: BotManagerInterface) {
+export default function StoPhoneBotHandler(BotManager: BotManagerInterface) {
     BotManager.bot.onText(/^\/sto (?<phone>\+?[0-9]+[0-9\s]+[0-9]+) ?(?<alias>.*)?$/, (msg, match) => {
         const phoneNumber = parsePhoneNumber(`+${match.groups.phone.replace(/[\s+]/g, '')}`);
         db.getUserById(msg.from.id)

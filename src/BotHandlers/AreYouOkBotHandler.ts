@@ -1,10 +1,10 @@
 import {db} from '../db';
-import botManager, {BotManagerInterface} from '../BotManager';
 import moment from 'moment';
 import {AYOK_DATE_FORMAT} from '../constants';
 import i18n from '../i18n';
+import BotManagerInterface from '../Interfaces/BotManagerInterface';
 
-export default function AreYouOkHandler(BotManager: BotManagerInterface) {
+export default function AreYouOkBotHandler(BotManager: BotManagerInterface) {
     BotManager.bot.on('callback_query', query => {
         const uid = query.from.id;
         const langArray = query.data.split('_');
@@ -19,7 +19,7 @@ export default function AreYouOkHandler(BotManager: BotManagerInterface) {
                     } else {
                         console.log(messageDT, moment());
                     }
-                    botManager.bot.editMessageText(i18n.t('good.thanks', {lng: res.lang}), {
+                    BotManager.bot.editMessageText(i18n.t('good.thanks', {lng: res.lang}), {
                         chat_id: uid,
                         message_id: query.message.message_id
                     });

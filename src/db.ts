@@ -1,46 +1,13 @@
 import {open} from 'sqlite';
 import sqlite3 from 'sqlite3';
+import DataBaseInterface from './Interfaces/DataBaseInterface';
 
 const connector = await open({
     filename: 'var/database.db',
     driver: sqlite3.Database
 });
 
-interface DbInterface {
-    addNewUser(uid: number, username: string)
-
-    setUserInActive(uid)
-
-    updateUserTz(uid: number, tz: number)
-
-    updateUserLang(uid: number, lng: string)
-
-    updateAreYouOkField(uid: number, key: string): void
-
-    addOrUpdateUserSubs(uid, key, alias)
-
-    getAllWaitSubsByPhoneHash(phoneHash: string)
-
-    getUserSubsById(uid)
-
-    getUsersByIds(ids)
-
-    deleteWaitUserPhoneSubById(id: number): void
-
-    deleteWaitUserUsernameSubById(id: number): void
-
-    getAllWaitSubsByUsername(username: string)
-
-    addToWaitAnswer(uid, ts, message_id)
-
-    deleteFromWaitAnswer(uid)
-
-    getAllWaitingAnswers(ts);
-
-    getAllSubscriberByUid(uid);
-}
-
-class DataBase implements DbInterface {
+class DataBase implements DataBaseInterface {
     addNewUser(uid, username) {
         return connector.run(
             'INSERT or IGNORE INTO users (uid, username, active) VALUES (:uid, :username, 0)',
