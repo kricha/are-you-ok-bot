@@ -17,7 +17,7 @@ export default function stoUsernameHandler(BotManager: BotManagerInterface) {
                             } else {
                                 db.addOrUpdateUserSubs(uid, res.uid, alias);
                             }
-                            BotManager.sendSubAddedReply(msg.chat.id, msg.message_id, lng, username, alias);
+                            BotManager.sendSubAddedReply(msg.chat.id, msg.message_id, lng, alias);
                         })
                     ;
                 } else {

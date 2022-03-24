@@ -26,6 +26,7 @@ export default function ContactHandler(BotManager: BotManagerInterface) {
                         const alias = aliasArray.length ? aliasArray.join(' ') : '';
                         if (msg.contact.user_id) {
                             db.addOrUpdateUserSubs(currentUid, msg.contact.user_id, alias);
+                            BotManager.sendSubAddedReply(currentUid, msg.message_id, res.lang, alias);
                         } else {
                             BotManager.processSharedPhoneContact(currentUid, msg.message_id, phoneNumber, res.lang, alias);
                         }
