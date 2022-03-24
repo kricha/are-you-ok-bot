@@ -17,7 +17,7 @@ const token = nconf.get('botToken');
 export interface BotManagerInterface {
     bot: TelegramBot
 
-    sendSubAddedReply(chat_id, reply_to_message_id, lng, contact, name): void
+    sendSubAddedReply(chat_id, reply_to_message_id, lng, name): void
 
     sendNotActiveReply(chat_id, reply_to_message_id, lng): void
 
@@ -197,15 +197,12 @@ class BotManager implements BotManagerInterface {
     }
 
     sendAreYouOkReport(chat_id, lng, report: any) {
-        console.log(report);
         const reportTextArray = [];
         for (const uid in report) {
             const sub = report[uid];
-            const status = i18n.t(`im.status.${sub.status}`, {lng});
-            console.log(status);
-            reportTextArray.push(`[${sub.alias ? sub.alias : uid}](tg://user?id=${uid}): ${status}`);
+            const status = i18n.t(sub.status, {lng});
+            reportTextArray.push(`*[${sub.alias ? sub.alias : uid}](tg://user?id=${uid})*: ${status}`);
         }
-        console.log(i18n.t('report', {lng, report: reportTextArray.join('\n')}));
         this.bot.sendMessage(chat_id, i18n.t('report', {lng, report: reportTextArray.join('\n')}), {
             parse_mode: 'MarkdownV2'
         });
