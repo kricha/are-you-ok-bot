@@ -34,11 +34,18 @@ export interface BotManagerInterface {
     sendCommandHelpMessage(chat_id, lng): void
 
     processSharedPhoneContact(uid: number, message_id: number, phoneNumber: PhoneNumber, lng: string, alias?: string)
+
+    handleForbiddenRequest(error, uid): void
 }
 
 class BotManager implements BotManagerInterface {
     bot = new TelegramBot(token, {polling: true});
 
+    handleForbiddenRequest(error, uid) {
+        if (error.response && error.response.statusCode === 403) {
+            db.setUserInActive(uid);
+        }
+    }
 
     sendInvalidPhoneReply(chat_id, reply_to_message_id, lng) {
         this.bot.sendMessage(

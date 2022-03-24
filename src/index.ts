@@ -25,12 +25,12 @@ cron.schedule('0 * * * *', () => {
     for (const ayokHour in processHours) {
         const timezones = processHours[ayokHour];
         if (timezones.length) {
-            const timeZonesString = timezones.map(tz=>`GMT${(parseInt(tz)>0?'+':'') + (parseInt(tz)/60).toString()}`).join(', ');
+            const timeZonesString = timezones.map(tz => `GMT${(parseInt(tz) > 0 ? '+' : '') + (parseInt(tz) / 60).toString()}`).join(', ');
             logger.info(`Start processing AYOK request for ${ayokHour}:00 in ${timeZonesString} timezones`);
             db.getUsersByTz(timezones)
                 .then((result) => {
-                    if (result) {
-                        const usersInTimeZones = result.map(row=>`${row.uid} ${row.username ? `(${row.username})` : ''}`).join(', ');
+                    if (result.length) {
+                        const usersInTimeZones = result.map(row => `${row.uid} ${row.username ? `(${row.username})` : ''}`).join(', ');
                         logger.info(`Users ${usersInTimeZones} start getting AYOK ${ayokHour}:00 requests`);
                         for (const row of result) {
                             BotManager.sendAreYouOkRequest(row.uid, row.lang, `ayok_${ayokHour}`)
@@ -40,10 +40,14 @@ cron.schedule('0 * * * *', () => {
                                     const date = moment(res.date * 1000).utcOffset(row.tz).add(30, 'm');
                                     db.addToWaitAnswer(res.chat.id, date.unix(), message_id);
                                 })
+                                .catch(error => BotManager.handleForbiddenRequest(error, row.uid))
                             ;
                         }
+                    } else {
+                        logger.info(`No users for AYOK ${ayokHour}:00 request in timezones ${timeZonesString}`);
                     }
-                });
+                })
+            ;
         }
     }
 });
