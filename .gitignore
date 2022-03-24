@@ -8,3 +8,5 @@ v8.log
 /config
 /var/*
 .eslintcache
+log
+!log/.gitkeep

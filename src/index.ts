@@ -5,6 +5,7 @@ import BotManager from './BotManager';
 import {tzMinutes} from './utils';
 import {AYOK_DATE_FORMAT, REPORT_HOURS} from './constants';
 import i18n from './i18n';
+import {logger} from './logger';
 
 process.env.NTBA_FIX_319 = '1';
 
@@ -21,16 +22,21 @@ cron.schedule('0 * * * *', () => {
         }
     }
 
-    for (const aokHour in processHours) {
-        const timezones = processHours[aokHour];
+    for (const ayokHour in processHours) {
+        const timezones = processHours[ayokHour];
         if (timezones.length) {
+            const timeZonesString = timezones.map(tz=>`GMT${(parseInt(tz)>0?'+':'') + (parseInt(tz)/60).toString()}`).join(', ');
+            logger.info(`Start processing AYOK request for ${ayokHour}:00 in ${timeZonesString} timezones`);
             db.getUsersByTz(timezones)
                 .then((result) => {
                     if (result) {
+                        const usersInTimeZones = result.map(row=>`${row.uid} ${row.username ? `(${row.username})` : ''}`).join(', ');
+                        logger.info(`Users ${usersInTimeZones} start getting AYOK ${ayokHour}:00 requests`);
                         for (const row of result) {
-                            BotManager.sendAreYouOkRequest(row.uid, row.lang, `ayok_${aokHour}`)
+                            BotManager.sendAreYouOkRequest(row.uid, row.lang, `ayok_${ayokHour}`)
                                 .then(res => {
                                     const message_id = res.message_id;
+                                    logger.info(`Successful sent request to chat ${res.chat.id} in message ${message_id}`);
                                     const date = moment(res.date * 1000).utcOffset(row.tz).add(30, 'm');
                                     db.addToWaitAnswer(res.chat.id, date.unix(), message_id);
                                 })
