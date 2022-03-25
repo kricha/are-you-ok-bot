@@ -1,7 +1,7 @@
 import TelegramBot from 'node-telegram-bot-api';
 import i18n from './i18n';
 import {db} from './db';
-import {buildTzKeyboardArray, getLangKeyboard, hash} from './utils';
+import {botHtmlReplacement, botHtmlReplacementRegExp, buildTzKeyboardArray, getLangKeyboard, hash} from './utils';
 import nconf from 'nconf';
 import {PhoneNumber} from 'libphonenumber-js';
 import StoPhoneBotHandler from './BotHandlers/StoPhoneBotHandler';
@@ -11,6 +11,7 @@ import AreYouOkBotHandler from './BotHandlers/AreYouOkBotHandler';
 import HelpBotHandler from './BotHandlers/HelpBotHandler';
 import LanguageCallbackBotHandler from './BotHandlers/LanguageCallbackBotHandler';
 import BotManagerInterface from './Interfaces/BotManagerInterface';
+import {logger} from "./logger";
 
 nconf.file({file: './config.json'});
 const token = nconf.get('botToken');
@@ -185,11 +186,20 @@ class BotManager implements BotManagerInterface {
         for (const uid in report) {
             const sub = report[uid];
             const status = i18n.t(sub.status, {lng});
-            reportTextArray.push(`*[${sub.alias ? sub.alias : uid}](tg://user?id=${uid})*: ${status}`);
+            const alias = sub.alias
+                ? sub.alias.toString().replace(botHtmlReplacementRegExp, a => botHtmlReplacement[a])
+                : uid
+            ;
+            reportTextArray.push(`<b><a href='tg://user?id=${uid}'>${alias}</a></b>: ${status}`);
         }
-        this.bot.sendMessage(chat_id, i18n.t('report', {lng, report: reportTextArray.join('\n')}), {
-            parse_mode: 'MarkdownV2'
-        });
+        const reportText = i18n.t('report', {lng, report: reportTextArray.join('\n')});
+        this.bot.sendMessage(chat_id, reportText, {
+            parse_mode: 'HTML'
+        })
+            .catch(error => {
+                logger.error(`Sending report to ${chat_id} with error ${error.message}`, reportText);
+            })
+        ;
     }
 
     processSharedPhoneContact(uid: number, message_id: number, phoneNumber: PhoneNumber, lng: string, alias?: string) {

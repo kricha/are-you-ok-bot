@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import {tzMinutes} from '../utils';
+import {areYouOkHours, tzMinutes} from '../utils';
 import moment from 'moment';
 import {logger} from '../logger';
 import {db} from '../db';
@@ -7,7 +7,7 @@ import BotManager from '../BotManager';
 
 export const AreYouOkCronHandler = () => {
     cron.schedule('0 * * * *', () => {
-        const processHours = {'12': [], '20': []};
+        const processHours = areYouOkHours;
 
         for (const offset of tzMinutes) {
             const offsetHH = moment().utcOffset(offset).format('HH');
