@@ -24,7 +24,7 @@ export const DayReportCronHandler = () => {
                         db.getUserSubsById(user.uid)
                             .then((row) => {
                                 if (!row) {
-                                    return;
+                                    continue;
                                 }
                                 const report = {};
                                 const usersToCheck = [];
@@ -65,7 +65,7 @@ export const DayReportCronHandler = () => {
                                 }
                                 Promise.all(usersToCheck)
                                     .then(() => {
-                                        BotManager.sendAreYouOkReport(97507112, user.lang, report);
+                                        BotManager.sendAreYouOkReport(user.uid, user.lang, report);
                                     });
                             });
                     }

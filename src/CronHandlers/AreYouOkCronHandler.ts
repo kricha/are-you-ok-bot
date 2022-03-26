@@ -32,7 +32,7 @@ export const AreYouOkCronHandler = () => {
                                     .then(res => {
                                         const message_id = res.message_id;
                                         logger.info(`[${token}] Successful sent request to chat ${res.chat.id} in message ${message_id}`);
-                                        const date = moment(res.date * 1000).utcOffset(row.tz).add(30, 'm');
+                                        const date = moment(res.date * 1000).utcOffset(row.tz);
                                         db.addToWaitAnswer(res.chat.id, date.unix(), message_id);
                                     })
                                     .catch(error => BotManager.handleForbiddenRequest(error, row.uid))

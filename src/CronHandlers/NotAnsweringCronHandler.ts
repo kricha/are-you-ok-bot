@@ -3,13 +3,20 @@ import {db} from '../db';
 import moment from 'moment';
 import BotManager from '../BotManager';
 import i18n from '../i18n';
-import {AYOK_DATE_FORMAT, NOT_ASWER_MINS_ALERT} from '../constants';
+import {AYOK_DATE_FORMAT} from '../constants';
+import {logger} from '../logger';
+import {getUnique, randomIntFromInterval} from '../utils';
 
 export const NotAnsweringCronHandler = () => {
-    cron.schedule('*/10 * * * *', () => {
+    cron.schedule('*/2 * * * *', () => {
+        const token = getUnique();
+        const now = moment();
+        logger.info(`[${token}] Run NotAnsweringCronHandler for ${now.unix()}`);
         db.getAllWaitingAnswers(moment().unix())
             .then(res => {
-                if (res.length) {
+                const waitingAnswerCount = res.length;
+                if (waitingAnswerCount) {
+                    logger.info(`[${token}] Waiting ${waitingAnswerCount} answers`);
                     for (const row of res) {
                         const userTsForMoment = row.ts * 1000;
                         const minutesDiff = moment()
@@ -18,12 +25,13 @@ export const NotAnsweringCronHandler = () => {
                                 'minute'
                             )
                         ;
-                        if (minutesDiff < NOT_ASWER_MINS_ALERT) {
-                            return;
+                        if (minutesDiff < randomIntFromInterval(14, 31)) {
+                            continue;
                         }
                         db.getAllSubscribersByUid(row.uid)
                             .then(subscribers => {
                                 if (subscribers.length) {
+                                    logger.info(`[${token}] Start sending sub.not.answering for ${row.uid} subscribers`);
                                     for (const sub of subscribers) {
                                         BotManager.bot.sendMessage(sub.uid, i18n.t('sub.not.answering', {
                                                 lng: sub.lang,
@@ -35,6 +43,9 @@ export const NotAnsweringCronHandler = () => {
                                                 parse_mode: 'MarkdownV2'
                                             }
                                         )
+                                            .then(() => {
+                                                logger.info(`[${token}] Sent sub.not.answering from ${row.uid} to ${sub.uid}`);
+                                            })
                                             .catch(error => {
                                                 if (error.response && error.response.statusCode === 403) {
                                                     db.setUserInActive(sub.uid);
@@ -44,7 +55,7 @@ export const NotAnsweringCronHandler = () => {
                                     }
                                     const answersKey = moment(userTsForMoment).utcOffset(row.tz).format(AYOK_DATE_FORMAT);
                                     const answers = JSON.parse(row.answers)[answersKey] || {};
-                                    const ayokHour = Object.keys(answers).includes('09') ? '20' : '09';
+                                    const ayokHour = Object.keys(answers).includes('09') ? '20' : '09';//TODO: automate
                                     BotManager.bot.sendMessage(
                                         row.uid,
                                         i18n.t('not.responding.message', {lng: row.lang, minutes: minutesDiff}),
@@ -60,14 +71,17 @@ export const NotAnsweringCronHandler = () => {
                                                     ]
                                                 ],
                                             }
-                                        }
-                                    );
-                                    db.setWaitQueueProcessed(row.uid);
+                                        })
+                                        .then(()=>{
+                                            logger.info(`[${token}] Sent not.responding.message to ${row.uid}`);
+                                        })
+                                    ;
                                     BotManager.bot.editMessageReplyMarkup({inline_keyboard: []}, {
                                         chat_id: row.uid,
                                         message_id: row.message_id
                                     });
                                 }
+                                db.setWaitQueueProcessed(row.uid);
                             })
                         ;
                     }
