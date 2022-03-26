@@ -11,7 +11,7 @@ import AreYouOkBotHandler from './BotHandlers/AreYouOkBotHandler';
 import HelpBotHandler from './BotHandlers/HelpBotHandler';
 import LanguageCallbackBotHandler from './BotHandlers/LanguageCallbackBotHandler';
 import BotManagerInterface from './Interfaces/BotManagerInterface';
-import {logger} from "./logger";
+import {logger} from './logger';
 
 nconf.file({file: './config.json'});
 const token = nconf.get('botToken');
@@ -150,7 +150,7 @@ class BotManager implements BotManagerInterface {
     }
 
     requestChooseKeyboard(chat_id) {
-        this.bot.sendMessage(chat_id, 'Виберіть мову / Choose language', {
+        this.bot.sendMessage(chat_id, 'Оберіть мову / Choose language', {
             reply_markup: {
                 inline_keyboard: getLangKeyboard()
             }
