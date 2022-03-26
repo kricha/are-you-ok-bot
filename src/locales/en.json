@@ -21,9 +21,11 @@
   "help": "🆘 Please read this message! I will help you! 🆘\n\n{{- time_set_header}}\n<i>Because I can help people from all around the world I need to know your time zone, to be precise in my questions and reports. You can change your time zone using command /change_timezone</i>\n\n<b>How can I subscribe to someone?</b>\n<i>1. Easiest way 🔥 You can share me needed contact using a clip 📎 on mobile, or a 'share' function on other devices</i>\n<i>2. Use this command for help - /command_help</i>\n\n<b>Whay is this all about?</b>\n<i>Next, I will ask you every day at 9:00, 15:00 and 21:00 if you're okay, and at 22:00 I will send you a report, about how your friends are doing, (only if they are using me as well, so please share me) 💪</i>\n\n<b>By using me you agree that I will know your username(if set), your telegram ID and your phone number(not in an open view) 🤓</b>\n\n<b>Link</b>\n- <a href='https://t.me/kRicha'>Questions/Suggestions</a>\n- <a href='https://github.com/kricha/are-you-ok-bot'>My code</a>\n- <a href='https://t.me/AreYouOkBotNews'>My news</a>\n\nStart over - /start\n\nThank you for attention 🌚",
   "label.share.bot": "Share a bot 📬",
   "call.join": "Join 🤗",
-  "sub.not.answering": "[{{name}}](tg://user?id={{uid}}) doesn't answer for over {{min}} minutes 🤔 Maybe you need to contact him ❗️",
+  "sub.not.answering": "[{{name}}](tg://user?id={{uid}}) doesn't answer for over {{min}} minutes 🤔 You may need to contact ❗️",
   "sub.status.unknown": "unknown 🤷‍, maybe this person is not using bot 😔",
   "sub.status.ok": "everything is cool 😎",
   "sub.status.no_answers": "does not answer 🆘 check if everything is fine ❗️",
-  "sub.status.not_all_ok": "not all confirmations were received, maybe something happened 🤔"
+  "sub.status.not_all_ok": "not all confirmations were received, maybe something happened 🤔",
+  "not.responding.message": "I informed the people who signed up for you that you did not respond within {{minutes}} minutes 😔 But you can still let me know that you're fine and I'll let them know 🎉 \n\nSo is everything okay? 🙏",
+  "already.answered": "🎉\nAn answer has already been received from <b><a href='tg://user?id={{uid}}'>{{alias}}</a></b>, everything is fine 👍"
 }
