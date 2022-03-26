@@ -1,6 +1,6 @@
 import {db} from '../db';
 import moment from 'moment';
-import {AYOK_DATE_FORMAT, NOT_ASWER_MINS_ALERT} from '../constants';
+import {AYOK_DATE_FORMAT} from '../constants';
 import i18n from '../i18n';
 import BotManagerInterface from '../Interfaces/BotManagerInterface';
 import {logger} from '../logger';
@@ -24,27 +24,8 @@ export default function AreYouOkBotHandler(BotManager: BotManagerInterface) {
                     logger.info(`[${token}] ${uid} answered after ${now.diff(messageDT, 'minutes')} minutes`);
                     db.getWaitAnswerByUid(uid)
                         .then(waitAnswer => {
-                            let msgIdToEdit = query.message.message_id;
-                            if (waitAnswer && waitAnswer.message_id !== msgIdToEdit) {
-                                msgIdToEdit = waitAnswer.message_id;
-                                BotManager.bot.deleteMessage(uid, query.message.message_id.toString())
-                                    .then(()=>{
-                                        logger.info(`[${token}] Deleted current request for ${uid}`);
-                                    })
-                                ;
-                            }
-                            BotManager.bot.editMessageText(i18n.t('good.thanks', {lng: res.lang}), {
-                                chat_id: uid,
-                                message_id: msgIdToEdit
-                            });
-                            db.deleteFromWaitAnswer(uid);
-                        })
-                    ;
-                    if (answerDiffDays < 1) {
-                        /** SENDING NOTIFICATION ABOUT OK ANSWER START **/
-                        if (moment.isMoment(messageTimeFromCb)) {
-                            const minutesFromAlert = now.diff(messageTimeFromCb, 'minutes');
-                            if (minutesFromAlert >= NOT_ASWER_MINS_ALERT) {
+                            if (waitAnswer && waitAnswer.is_processed === 1 && moment.isMoment(messageTimeFromCb)) {
+                                const minutesFromAlert = now.diff(messageTimeFromCb, 'minutes');
                                 logger.info(`[${token}] ${uid} answering answers too late, after ${minutesFromAlert} from original ask`);
                                 db.getAllSubscribersByUid(res.uid)
                                     .then(subscribers => {
@@ -73,7 +54,23 @@ export default function AreYouOkBotHandler(BotManager: BotManagerInterface) {
                                     })
                                 ;
                             }
-                        }
+                            let msgIdToEdit = query.message.message_id;
+                            if (waitAnswer && waitAnswer.message_id !== msgIdToEdit) {
+                                msgIdToEdit = waitAnswer.message_id;
+                                BotManager.bot.deleteMessage(uid, query.message.message_id.toString())
+                                    .then(()=>{
+                                        logger.info(`[${token}] Deleted current request for ${uid}`);
+                                    })
+                                ;
+                            }
+                            BotManager.bot.editMessageText(i18n.t('good.thanks', {lng: res.lang}), {
+                                chat_id: uid,
+                                message_id: msgIdToEdit
+                            });
+                            db.deleteFromWaitAnswer(uid);
+                        })
+                    ;
+                    if (answerDiffDays < 1) {
                         db.updateAreYouOkField(uid, `'$.${dateKey}.${ayokHour}'`);
                     }
                 })
