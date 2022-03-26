@@ -24,7 +24,7 @@ export const DayReportCronHandler = () => {
                         db.getUserSubsById(user.uid)
                             .then((row) => {
                                 if (!row) {
-                                    continue;
+                                    return;
                                 }
                                 const report = {};
                                 const usersToCheck = [];
