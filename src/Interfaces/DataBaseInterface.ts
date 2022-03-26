@@ -23,11 +23,15 @@ export default interface DataBaseInterface {
 
     getAllWaitSubsByUsername(username: string);
 
+    getWaitAnswerByUid(uid);
+
     addToWaitAnswer(uid, ts, message_id);
+
+    setWaitQueueProcessed(uid): void
 
     deleteFromWaitAnswer(uid);
 
     getAllWaitingAnswers(ts);
 
-    getAllSubscriberByUid(uid);
-}
+    getAllSubscribersByUid(uid);
+}/* eslint-disable-line */
