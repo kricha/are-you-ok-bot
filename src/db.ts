@@ -173,7 +173,7 @@ class DataBase implements DataBaseInterface {
 
     addOrUpdateUserSubs(uid, key, alias) {
         return connector.run(
-            'INSERT INTO subs (uid, users) VALUES (:uid, json_insert(\'{}\', :key, :alias )) ON CONFLICT(uid) DO UPDATE SET users = json_insert(users, :key, :alias );', {
+            'INSERT INTO subs (uid, users) VALUES (:uid, json_insert(\'{}\', :key, :alias )) ON CONFLICT(uid) DO UPDATE SET users = json_set(users, :key, :alias );', {
                 ':key': `$.${key}`,
                 ':alias': alias,
                 ':uid': uid
