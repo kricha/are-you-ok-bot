@@ -23,4 +23,4 @@ export default interface BotManagerInterface {
     processSharedPhoneContact(uid: number, message_id: number, phoneNumber: PhoneNumber, lng: string, alias?: string)
 
     handleForbiddenRequest(error, uid): void
-}
+}/* eslint-disable-line */
