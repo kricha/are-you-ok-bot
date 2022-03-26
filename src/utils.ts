@@ -17,6 +17,8 @@ export const areYouOkHours = {'12': [], '20': []};
 
 export const getUnique = () => Math.random().toString(36).replace('0.', '');
 
+export const randomIntFromInterval = (min:number, max:number) => Math.floor(Math.random() * (max - min + 1) + min);
+
 export const buildTzKeyboardArray = () => new Promise<InlineKeyboardButton[][]>(resolve => {
     const tzKeyboard = [];
     const TzRange = range(-12, 14);
