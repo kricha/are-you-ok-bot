@@ -12,6 +12,7 @@ import HelpBotHandler from './BotHandlers/HelpBotHandler';
 import LanguageCallbackBotHandler from './BotHandlers/LanguageCallbackBotHandler';
 import BotManagerInterface from './Interfaces/BotManagerInterface';
 import {logger} from './logger';
+import {AdminForwardMsgBotHandler} from './BotHandlers/AdminForwardMsgBotHandler';
 
 const token = conf.get('botToken');
 
@@ -266,6 +267,7 @@ class BotManager implements BotManagerInterface {
         AreYouOkBotHandler(this);
         HelpBotHandler(this);
         LanguageCallbackBotHandler(this);
+        AdminForwardMsgBotHandler();
         this.tzCallBackHandler();
         this.cancelContactHandler();
     }
