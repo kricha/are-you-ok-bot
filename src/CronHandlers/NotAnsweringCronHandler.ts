@@ -8,7 +8,7 @@ import {logger} from '../logger';
 import {getUnique, randomIntFromInterval} from '../utils';
 
 export const NotAnsweringCronHandler = () => {
-    cron.schedule('*/2 * * * *', () => {
+    cron.schedule('*/5 * * * *', () => {
         const token = getUnique();
         const now = moment();
         logger.info(`[${token}] Run NotAnsweringCronHandler for ${now.unix()}`);
