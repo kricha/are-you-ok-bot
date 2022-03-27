@@ -2,7 +2,7 @@ import TelegramBot from 'node-telegram-bot-api';
 import i18n from './i18n';
 import {db} from './db';
 import {botHtmlReplacement, botHtmlReplacementRegExp, buildTzKeyboardArray, getLangKeyboard, hash} from './utils';
-import nconf from 'nconf';
+import conf from './conf';
 import {PhoneNumber} from 'libphonenumber-js';
 import StoPhoneBotHandler from './BotHandlers/StoPhoneBotHandler';
 import StoUsernameBotHandler from './BotHandlers/StoUsernameBotHandler';
@@ -13,8 +13,11 @@ import LanguageCallbackBotHandler from './BotHandlers/LanguageCallbackBotHandler
 import BotManagerInterface from './Interfaces/BotManagerInterface';
 import {logger} from './logger';
 
-nconf.file({file: './config.json'});
-const token = nconf.get('botToken');
+const token = conf.get('botToken');
+
+if (!token) {
+    logger.error('Telegram bot token [botToken] not set!');
+}
 
 class BotManager implements BotManagerInterface {
     bot = new TelegramBot(token, {polling: true});
