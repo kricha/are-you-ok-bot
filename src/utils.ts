@@ -13,11 +13,13 @@ export const botHtmlReplacement = {'<':'&lt;','>':'&gt;','&':'&amp;'};
 
 export const botHtmlReplacementRegExp = new RegExp(`[${Object.keys(botHtmlReplacement).join('')}]`, 'g');
 
-export const areYouOkHours = {'14': [], '20': []};
+export const areYouOkHours = {'12': [], '20': []};
 
 export const getUnique = () => Math.random().toString(36).replace('0.', '');
 
 export const randomIntFromInterval = (min:number, max:number) => Math.floor(Math.random() * (max - min + 1) + min);
+
+export const sleep = ms => new Promise(res => setTimeout(res, ms));
 
 export const buildTzKeyboardArray = () => new Promise<InlineKeyboardButton[][]>(resolve => {
     const tzKeyboard = [];
