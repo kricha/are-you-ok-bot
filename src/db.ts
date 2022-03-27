@@ -199,7 +199,7 @@ class DataBase implements DataBaseInterface {
 
     addToWaitAnswer(uid, ts, message_id) {
         return connector.run(
-            'INSERT or IGNORE INTO wait_answer_queue (uid, ts, message_id) VALUES (:uid, :ts, :message_id)',
+            'INSERT INTO wait_answer_queue (uid, ts, message_id) VALUES (:uid, :ts, :message_id) ON CONFLICT(uid) DO UPDATE SET ts = :ts, message_id = :message_id;',
             {
                 ':uid': uid,
                 ':ts': ts,

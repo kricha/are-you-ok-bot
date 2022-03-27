@@ -13,7 +13,7 @@ export const botHtmlReplacement = {'<':'&lt;','>':'&gt;','&':'&amp;'};
 
 export const botHtmlReplacementRegExp = new RegExp(`[${Object.keys(botHtmlReplacement).join('')}]`, 'g');
 
-export const areYouOkHours = {'12': [], '20': []};
+export const areYouOkHours = {'14': [], '20': []};
 
 export const getUnique = () => Math.random().toString(36).replace('0.', '');
 

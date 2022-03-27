@@ -8,10 +8,13 @@ import BotManager from '../BotManager';
 export const AreYouOkCronHandler = () => {
     cron.schedule('0 * * * *', () => {
         const token = getUnique();
-        const processHours = areYouOkHours;
+        const processHours = JSON.parse(JSON.stringify(areYouOkHours));
+        const now = moment();
+
+        logger.info(`[${token}] Run AreYouOkCronHandler ${now}`);
 
         for (const offset of tzMinutes) {
-            const offsetHH = moment().utcOffset(offset).format('HH');
+            const offsetHH = now.clone().utcOffset(offset).format('HH');
             if (Object.prototype.hasOwnProperty.call(processHours, offsetHH)) {
                 processHours[offsetHH].push(offset);
             }
