@@ -66,6 +66,10 @@ class DataBase implements DataBaseInterface {
         connector.run('delete from wait_subs_phone_hash where id = :id', {':id': id});
     }
 
+    getAllActiveUsers(){
+        return connector.all('SELECT * from users where active = 1;');
+    }
+
     getAllWaitSubsByPhoneHash(phoneHash) {
         return connector
             .all(

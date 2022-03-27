@@ -3,6 +3,8 @@ export default interface DataBaseInterface {
 
     setUserInActive(uid);
 
+    getAllActiveUsers();
+
     updateUserTz(uid: number, tz: number);
 
     updateUserLang(uid: number, lng: string);
