@@ -29,7 +29,9 @@ jobs:
       - name: Delete old images
         uses: snok/container-retention-policy@v1
         with:
-          image-names: 'are-you-ok-bot'
+          image-names: are-you-ok-bot
+          cut-off: 1 minute ago UTC
+          skip-tags: latest
           keep-at-least: 3
           account-type: personal
           token: ${{ secrets.PAT }}
