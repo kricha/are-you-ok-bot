@@ -21,8 +21,8 @@ RUN apk update && apk add --no-cache tzdata \
 
 COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/dist /app/dist
-COPY ./var /app/var
-COPY ./log /app/log
-COPY ./migrations /app/migrations
-COPY ./ecosystem.config.cjs /app/ecosystem.config.cjs
-COPY ./package.json /app/package.json
+COPY ../../var /app/var
+COPY ../../log /app/log
+COPY ../../migrations /app/migrations
+COPY ../../ecosystem.config.cjs /app/ecosystem.config.cjs
+COPY ../../package.json /app/package.json
