@@ -3,7 +3,7 @@ services:
   bot:
     build:
       context: .
-      dockerfile: Dockerfile.local
+      dockerfile: .docker/local/Dockerfile
     container_name: bot
     volumes:
       - ./:/app
