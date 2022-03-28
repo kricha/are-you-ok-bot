@@ -31,7 +31,7 @@ jobs:
         with:
           package-name: 'are-you-ok-bot'
           min-versions-to-keep: 3
-          token: ${{ secrets.PAT }}
+#          token: ${{ secrets.PAT }}
       - name: GitHub tags cleanup #https://github.com/dev-drprasad/delete-older-releases
         uses: dev-drprasad/delete-older-releases@v0.2.0
         with:
