@@ -34,23 +34,11 @@ jobs:
           skip-tags: latest
           keep-at-least: 3
           account-type: personal
-          token: ${{ secrets.PAT }}
-#      - name: Docker repo cleanup
-#        uses: actions/delete-package-versions@v3
-#        with:
-#          owner: 'github'
-#          repo: 'packages'
-#          package-name: 'test-package'
-#          token: ${{ secrets.PAT }}
-#          min-versions-to-keep: 2
-#          package-name: 'are-you-ok-bot'
-#          min-versions-to-keep: 3
-##          token: ${{ secrets.PAT }}
+          token: ${{ secrets.PAT }} # token with delete:packages and read:packages enabled permissions
       - name: GitHub tags cleanup #https://github.com/dev-drprasad/delete-older-releases
         uses: dev-drprasad/delete-older-releases@v0.2.0
         with:
           keep_latest: 3
           delete_tags: true
-#          delete_tag_pattern: beta # defaults to ""
         env:
           GITHUB_TOKEN: ${{ github.token }}
