@@ -30,6 +30,7 @@ jobs:
         uses: actions/delete-package-versions@v3
         with:
           package-name: 'are-you-ok-bot'
+          owner: 'github'
           min-versions-to-keep: 3
       - name: GitHub tags cleanup
         uses: dev-drprasad/delete-older-releases@v0.2.0
